@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "LastWarriorAnimInstance.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -49,7 +50,7 @@ ALastWarriorCharacter::ALastWarriorCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
+	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -66,6 +67,17 @@ void ALastWarriorCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+
+	// Anim
+	Anim = Cast<ULastWarriorAnimInstance>(GetMesh()->GetAnimInstance());
+
+	if(Anim != nullptr)
+	{
+		AttackComboMaxCnt = Anim->GetAttackComboCnt();
+		
+		Anim->OnNextAttackCheck.AddLambda([this]() -> void{CheckAttackNextCombo();});
+		Anim->OnResetAttackComboCehck.AddLambda([this]() -> void{AttackEnd();});
 	}
 }
 
@@ -86,6 +98,9 @@ void ALastWarriorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ALastWarriorCharacter::Look);
+		
+		// Attack
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ALastWarriorCharacter::ComboAttack);
 	}
 	else
 	{
@@ -126,5 +141,66 @@ void ALastWarriorCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ALastWarriorCharacter::PlayAttackAni(int32 Combo)
+{
+	if(Combo > AttackComboMaxCnt)
+		return;
+
+	if(Anim->GetAttackMontage() == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("montage null"));
+		return;
+	}
+	
+	IsAttack = true;
+	IsComboInputTime = false;
+	IsComboInput = false;
+	
+	Anim->Montage_Play(Anim->GetAttackMontage());
+	Anim->JumpToAttackMontageSection(Combo);
+}
+
+void ALastWarriorCharacter::AttackEnd()
+{
+	IsAttack = false;
+	IsComboInputTime = false;
+	IsComboInput = false;
+	CurrentAttackCombo = 0;
+}
+
+void ALastWarriorCharacter::ComboAttack()
+{
+	if(Anim == nullptr)
+		return;
+	
+	if(!IsAttack)
+	{
+		CurrentAttackCombo += 1;
+		PlayAttackAni(CurrentAttackCombo);
+		return;
+	}
+
+	if(IsComboInputTime)
+	{
+		CurrentAttackCombo += 1;
+		PlayAttackAni(CurrentAttackCombo);
+	}
+
+	else
+	{
+		IsComboInput = true; 
+	}
+}
+
+void ALastWarriorCharacter::CheckAttackNextCombo()
+{
+	IsComboInputTime = true;
+	if(IsComboInput)
+	{
+		CurrentAttackCombo += 1;
+		PlayAttackAni(CurrentAttackCombo);
 	}
 }

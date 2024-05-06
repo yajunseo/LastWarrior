@@ -44,6 +44,11 @@ class ALastWarriorCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AttackAction;
+
+	class ULastWarriorAnimInstance* Anim;
+	
 public:
 	ALastWarriorCharacter();
 	
@@ -55,8 +60,17 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
 
+	bool IsAttack = false;
+	bool IsComboInputTime = false;
+	bool IsComboInput = false;
+	int32 AttackComboMaxCnt = 0;
+	int32 CurrentAttackCombo = 0;
+	void PlayAttackAni(int32 Combo);
+	void AttackEnd();
+	void ComboAttack();
+	void CheckAttackNextCombo();
+	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

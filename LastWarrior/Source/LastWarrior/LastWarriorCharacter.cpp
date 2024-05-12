@@ -81,6 +81,15 @@ void ALastWarriorCharacter::BeginPlay()
 	}
 }
 
+void ALastWarriorCharacter::AttackHitCheck()
+{
+}
+
+void ALastWarriorCharacter::AttackHitCheckEnd()
+{
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 

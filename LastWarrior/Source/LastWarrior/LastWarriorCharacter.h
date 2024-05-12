@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AnimationAttackInterface.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "LastWarriorCharacter.generated.h"
@@ -16,7 +17,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class ALastWarriorCharacter : public ACharacter
+class ALastWarriorCharacter : public ACharacter, public IAnimationAttackInterface
 {
 	GENERATED_BODY()
 
@@ -83,5 +84,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	virtual void AttackHitCheck() override;
+	virtual void AttackHitCheckEnd() override;
 };
 

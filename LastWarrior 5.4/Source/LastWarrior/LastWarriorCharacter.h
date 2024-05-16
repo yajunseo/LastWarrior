@@ -48,6 +48,10 @@ class ALastWarriorCharacter : public ACharacter, public IAnimationAttackInterfac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AttackAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AWeapon> Weapon;
+
+	
 	class ULastWarriorAnimInstance* Anim;
 	
 public:
@@ -87,5 +91,7 @@ public:
 
 	virtual void AttackHitCheck() override;
 	virtual void AttackHitCheckEnd() override;
+
+	void SetWeapon();
 };
 

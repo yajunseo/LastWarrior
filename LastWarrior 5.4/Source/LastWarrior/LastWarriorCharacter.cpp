@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "LastWarriorAnimInstance.h"
+#include "Weapon.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -79,6 +80,9 @@ void ALastWarriorCharacter::BeginPlay()
 		Anim->OnNextAttackCheck.AddLambda([this]() -> void{CheckAttackNextCombo();});
 		Anim->OnResetAttackComboCehck.AddLambda([this]() -> void{AttackEnd();});
 	}
+
+	// Test 코드
+	SetWeapon();
 }
 
 void ALastWarriorCharacter::AttackHitCheck()
@@ -87,6 +91,18 @@ void ALastWarriorCharacter::AttackHitCheck()
 
 void ALastWarriorCharacter::AttackHitCheckEnd()
 {
+}
+
+void ALastWarriorCharacter::SetWeapon()
+{
+	if(Weapon == nullptr)
+		return;
+
+	auto CreateWeapon = GetWorld()->SpawnActor<AWeapon>(Weapon, FVector::ZeroVector, FRotator::ZeroRotator);
+	if(CreateWeapon != nullptr)
+	{
+		CreateWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, CreateWeapon->GetWeaponAttachSocketName());
+	}
 }
 
 

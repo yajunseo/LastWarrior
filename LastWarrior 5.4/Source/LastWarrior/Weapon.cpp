@@ -10,12 +10,9 @@ AWeapon::AWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	CapsulComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Component"));
-	RootComponent = CapsulComp;
-
+	
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeltalMesh Component"));
-	SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("Scene Component"));
+	RootComponent = MeshComp;
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +27,20 @@ void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AWeapon::SetWeaponSocketName(FName SocketName)
+{
+	WeaponSoket = SocketName;
+}
+
+float AWeapon::GetDamage()
+{
+	return Damage;
+}
+
+FName AWeapon::GetWeaponAttachSocketName()
+{
+	return WeaponSoket;
 }
 

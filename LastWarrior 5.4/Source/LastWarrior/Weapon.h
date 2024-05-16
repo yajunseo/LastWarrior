@@ -25,14 +25,17 @@ public:
 
 private:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Component, meta = (AllowPrivateAccess = true))
-	class UCapsuleComponent* CapsulComp = NULL;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Component, meta = (AllowPrivateAccess = true))
 	class USkeletalMeshComponent* MeshComp = NULL;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Component, meta = (AllowPrivateAccess = true))
-	class USceneComponent* SceneComp = NULL;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = State, meta = (AllowPrivateAccess = true))
 	float Damage = 0.0f;
+
+protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Socket, meta = (AllowPrivateAccess = true))
+	FName WeaponSoket = TEXT("hand_rSocket");
+	
+public:
+	void SetWeaponSocketName(FName SocketName);
+	float GetDamage();
+	FName GetWeaponAttachSocketName();
 };

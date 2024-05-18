@@ -75,6 +75,8 @@ protected:
 	void AttackEnd();
 	void ComboAttack();
 	void CheckAttackNextCombo();
+
+	virtual void Tick(float DeltaSeconds) override;
 	
 protected:
 	// APawn interface
@@ -93,5 +95,12 @@ public:
 	virtual void AttackHitCheckEnd() override;
 
 	void SetWeapon();
+
+private:
+	UPROPERTY()
+	AWeapon* WeaponInstance = nullptr;
+	
+	bool isAttack = false;
+	void PerformAttackSweep();
 };
 

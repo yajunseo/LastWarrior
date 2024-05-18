@@ -31,4 +31,6 @@ private:
 public:
 	FVector GetWeaponDamageStartPos();
 	FVector GetWeaponDamageEndPos();
+	float GetCapsuleRadius();
+	
 };

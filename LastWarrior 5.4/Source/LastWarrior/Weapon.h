@@ -6,6 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	WT_None UMETA(DisplayName = "None"),
+	WT_OneHand UMETA(DisplayName = "OneHand"),
+};
+
 UCLASS()
 class LASTWARRIOR_API AWeapon : public AActor
 {
@@ -33,9 +40,12 @@ private:
 protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Socket, meta = (AllowPrivateAccess = true))
 	FName WeaponSoket = TEXT("hand_rSocket");
+
+	EWeaponType WeaponType = EWeaponType::WT_None;
 	
 public:
 	void SetWeaponSocketName(FName SocketName);
 	float GetDamage();
 	FName GetWeaponAttachSocketName();
+	EWeaponType GetWeaponType();
 };

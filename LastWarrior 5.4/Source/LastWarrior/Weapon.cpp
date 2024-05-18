@@ -44,3 +44,8 @@ FName AWeapon::GetWeaponAttachSocketName()
 	return WeaponSoket;
 }
 
+EWeaponType AWeapon::GetWeaponType()
+{
+	return WeaponType;
+}
+

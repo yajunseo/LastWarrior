@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "LastWarriorAnimInstance.h"
 #include "Weapon.h"
+#include "WeaponOneHand.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -85,12 +86,29 @@ void ALastWarriorCharacter::BeginPlay()
 	SetWeapon();
 }
 
+void ALastWarriorCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	if(isAttack && WeaponInstance != nullptr)
+	{
+		switch (WeaponInstance->GetWeaponType())
+		{
+		case EWeaponType::WT_OneHand:
+			PerformAttackSweep();
+			break;
+		}
+	}
+}
+
 void ALastWarriorCharacter::AttackHitCheck()
 {
+	isAttack = true;
 }
 
 void ALastWarriorCharacter::AttackHitCheckEnd()
 {
+	isAttack = false;
 }
 
 void ALastWarriorCharacter::SetWeapon()
@@ -102,7 +120,42 @@ void ALastWarriorCharacter::SetWeapon()
 	if(CreateWeapon != nullptr)
 	{
 		CreateWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, CreateWeapon->GetWeaponAttachSocketName());
+		WeaponInstance = CreateWeapon;
 	}
+}
+
+void ALastWarriorCharacter::PerformAttackSweep()
+{
+	TArray<FHitResult> HitResults;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
+	AWeaponOneHand* OneHandWeapon = Cast<AWeaponOneHand>(WeaponInstance);
+
+	
+	if(OneHandWeapon == nullptr)
+		return;
+
+	bool IsHit = GetWorld()->SweepMultiByChannel(
+		HitResults,
+		OneHandWeapon->GetWeaponDamageStartPos(),
+		OneHandWeapon->GetWeaponDamageEndPos(),
+		FQuat::Identity,
+		ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(OneHandWeapon->GetCapsuleRadius()),
+		CollisionParams
+	);
+	
+	DrawDebugSphere(
+		GetWorld(),
+		(OneHandWeapon->GetWeaponDamageStartPos() + OneHandWeapon->GetWeaponDamageEndPos()) / 2.0f,
+		OneHandWeapon->GetCapsuleRadius(),
+		12,
+		IsHit? FColor::Green : FColor::Red,
+		false,
+		0.5f,
+		0,
+		1
+	);
 }
 
 

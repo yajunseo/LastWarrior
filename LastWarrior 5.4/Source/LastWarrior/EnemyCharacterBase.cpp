@@ -32,3 +32,16 @@ void AEnemyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 }
 
+float AEnemyCharacterBase::GetHP()
+{
+	return HP;
+}
+
+void AEnemyCharacterBase::TakeDamage(float Damage)
+{
+	if(HP > 0.0f)
+	{
+		HP = FMath::Clamp(HP - Damage, 0.0f, HP);
+	}
+}
+

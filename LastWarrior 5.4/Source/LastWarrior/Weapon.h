@@ -34,7 +34,7 @@ private:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Component, meta = (AllowPrivateAccess = true))
 	class USkeletalMeshComponent* MeshComp = NULL;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = State, meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Stat, meta = (AllowPrivateAccess = true))
 	float Damage = 0.0f;
 
 protected:

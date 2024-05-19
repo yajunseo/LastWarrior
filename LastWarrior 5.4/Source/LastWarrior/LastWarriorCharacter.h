@@ -51,13 +51,23 @@ class ALastWarriorCharacter : public ACharacter, public IAnimationAttackInterfac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AWeapon> Weapon;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
+	float Damage;
 	
 	class ULastWarriorAnimInstance* Anim;
 	
 public:
 	ALastWarriorCharacter();
 	
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	virtual void AttackHitCheck() override;
+	virtual void AttackHitCheckEnd() override;
+
+	void SetWeapon();
 protected:
 
 	/** Called for movement input */
@@ -78,23 +88,11 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 	
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// To add mapping context
 	virtual void BeginPlay();
-
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-	virtual void AttackHitCheck() override;
-	virtual void AttackHitCheckEnd() override;
-
-	void SetWeapon();
 
 private:
 	UPROPERTY()
@@ -102,5 +100,7 @@ private:
 	
 	bool isAttack = false;
 	void PerformAttackSweep();
+
+	TSet<class AEnemyCharacterBase*> HitEnemies;
 };
 

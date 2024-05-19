@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "LastWarriorCharacter.h"
+
+#include "EnemyCharacterBase.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -108,6 +110,7 @@ void ALastWarriorCharacter::AttackHitCheck()
 
 void ALastWarriorCharacter::AttackHitCheckEnd()
 {
+	HitEnemies.Empty();
 	isAttack = false;
 }
 
@@ -156,6 +159,23 @@ void ALastWarriorCharacter::PerformAttackSweep()
 		0,
 		1
 	);
+
+	for (auto HitResult : HitResults)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		if(HitActor == nullptr)
+			continue;
+		
+		AEnemyCharacterBase* Enemy = Cast<AEnemyCharacterBase>(HitActor);
+		if(Enemy == nullptr)
+			continue;
+
+		if(HitEnemies.Contains(Enemy))
+			continue;
+		
+		HitEnemies.Add(Enemy);
+		Enemy->TakeDamage(Damage);
+	}
 }
 
 

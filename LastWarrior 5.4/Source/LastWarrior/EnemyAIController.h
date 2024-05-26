@@ -25,6 +25,11 @@ class LASTWARRIOR_API AEnemyAIController : public AAIController
 
 public:
 	AEnemyAIController();
+	virtual void OnPossess(APawn* InPawn) override;
+	
+	static const FName HomePosKey;
+	static const FName PatrolPosKey;
+	static const FName TargetKey;
 	
 protected:
 	virtual void BeginPlay() override;

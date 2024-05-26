@@ -3,12 +3,13 @@
 
 #include "EnemyCharacterBase.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 // Sets default values
 AEnemyCharacterBase::AEnemyCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +38,11 @@ float AEnemyCharacterBase::GetHP()
 	return HP;
 }
 
+float AEnemyCharacterBase::GetDetectRange()
+{
+	return DetectRange;
+}
+
 void AEnemyCharacterBase::TakeDamage(float Damage)
 {
 	if(HP > 0.0f)
@@ -44,4 +50,3 @@ void AEnemyCharacterBase::TakeDamage(float Damage)
 		HP = FMath::Clamp(HP - Damage, 0.0f, HP);
 	}
 }
-

@@ -21,6 +21,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = STAT, meta = (AllowPrivateAccess = "true"))
 	float HP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = STAT, meta = (AllowPrivateAccess = "true"))
+	float DetectRange = 1000.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
+	TArray<FVector> PatrolPoints;
 	
 public:	
 	// Called every frame
@@ -30,6 +36,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	float GetHP();
+
+	float GetDetectRange();
 
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float Damage);

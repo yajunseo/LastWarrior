@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "EnemyCharacterBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate);
+
 UCLASS()
 class LASTWARRIOR_API AEnemyCharacterBase : public ACharacter
 {
@@ -24,6 +26,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = STAT, meta = (AllowPrivateAccess = "true"))
 	float DetectRange = 1000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = STAT, meta = (AllowPrivateAccess = "true"))
+	float AttackRange = 200.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TArray<FVector> PatrolPoints;
@@ -36,9 +41,16 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	float GetHP();
-
 	float GetDetectRange();
-
+	float GetAttackRange();
+	
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float Damage);
+
+	void Attack();
+	FOnAttackEndDelegate OnAttackEnd;
+
+private:
+	FTimerHandle TestTimerHandle;
+	void TestAttackEnd();
 };

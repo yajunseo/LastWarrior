@@ -15,7 +15,8 @@ UBTTask_FindPatrolPos::UBTTask_FindPatrolPos()
 
 EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-
+	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
+	
 	auto EnemyPawn = OwnerComp.GetAIOwner()->GetPawn();
 	if(EnemyPawn == nullptr)
 		return EBTNodeResult::Failed;

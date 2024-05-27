@@ -43,10 +43,27 @@ float AEnemyCharacterBase::GetDetectRange()
 	return DetectRange;
 }
 
+float AEnemyCharacterBase::GetAttackRange()
+{
+	return AttackRange;
+}
+
 void AEnemyCharacterBase::TakeDamage(float Damage)
 {
 	if(HP > 0.0f)
 	{
 		HP = FMath::Clamp(HP - Damage, 0.0f, HP);
 	}
+}
+
+void AEnemyCharacterBase::Attack()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
+
+	GetWorld()->GetTimerManager().SetTimer(TestTimerHandle, this, &AEnemyCharacterBase::TestAttackEnd, 2.0f, false);
+}
+
+void AEnemyCharacterBase::TestAttackEnd()
+{
+	OnAttackEnd.Broadcast();
 }

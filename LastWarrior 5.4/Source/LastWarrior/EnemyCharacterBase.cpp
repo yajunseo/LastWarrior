@@ -2,6 +2,8 @@
 
 
 #include "EnemyCharacterBase.h"
+#include "Weapon.h"
+#include "WeaponOneHand.h"
 
 #include "Kismet/KismetMathLibrary.h"
 
@@ -16,7 +18,9 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 void AEnemyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	Anim = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	SetWeapon();
 }
 
 // Called every frame
@@ -56,14 +60,43 @@ void AEnemyCharacterBase::TakeDamage(float Damage)
 	}
 }
 
-void AEnemyCharacterBase::Attack()
+void AEnemyCharacterBase::AttackHitCheck()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ATTACK"));
-
-	GetWorld()->GetTimerManager().SetTimer(TestTimerHandle, this, &AEnemyCharacterBase::TestAttackEnd, 2.0f, false);
+	HitCheckOn = true;
 }
 
-void AEnemyCharacterBase::TestAttackEnd()
+void AEnemyCharacterBase::AttackHitCheckEnd()
 {
+	HitCheckOn = false;
+}
+
+void AEnemyCharacterBase::AttackMotionEnd()
+{
+	IsAttack = false;
 	OnAttackEnd.Broadcast();
+}
+
+void AEnemyCharacterBase::Attack()
+{
+	if(Anim == nullptr)
+		return;
+
+	if(IsAttack)
+		return;
+	
+	IsAttack = true;
+	Anim->Montage_Play(Anim->GetNormalAttackMontage());
+}
+
+void AEnemyCharacterBase::SetWeapon()
+{
+	if(Weapon == nullptr)
+		return;
+	
+	auto CreateWeapon = GetWorld()->SpawnActor<AWeapon>(Weapon);
+	if(CreateWeapon != nullptr)
+	{
+		CreateWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, CreateWeapon->GetWeaponAttachSocketName());
+		WeaponInstance = CreateWeapon;
+	}
 }

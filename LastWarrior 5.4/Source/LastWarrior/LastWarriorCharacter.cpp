@@ -114,6 +114,10 @@ void ALastWarriorCharacter::AttackHitCheckEnd()
 	isAttack = false;
 }
 
+void ALastWarriorCharacter::AttackMotionEnd()
+{
+}
+
 void ALastWarriorCharacter::SetWeapon()
 {
 	if(Weapon == nullptr)

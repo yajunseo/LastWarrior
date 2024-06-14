@@ -24,4 +24,5 @@ class LASTWARRIOR_API IAnimationAttackInterface
 public:
 	virtual void AttackHitCheck() = 0;
 	virtual void AttackHitCheckEnd() = 0;
+	virtual void AttackMotionEnd() = 0;
 };

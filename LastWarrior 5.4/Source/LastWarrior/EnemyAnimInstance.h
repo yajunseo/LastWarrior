@@ -13,5 +13,11 @@ UCLASS()
 class LASTWARRIOR_API UEnemyAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* NormalAttackMontage;
+
+public:
+	UAnimMontage* GetNormalAttackMontage();
 };

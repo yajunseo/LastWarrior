@@ -66,7 +66,8 @@ public:
 
 	virtual void AttackHitCheck() override;
 	virtual void AttackHitCheckEnd() override;
-
+	virtual void AttackMotionEnd() override;
+	
 	void SetWeapon();
 protected:
 

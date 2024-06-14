@@ -3,3 +3,7 @@
 
 #include "EnemyAnimInstance.h"
 
+UAnimMontage* UEnemyAnimInstance::GetNormalAttackMontage()
+{
+	return NormalAttackMontage;
+}

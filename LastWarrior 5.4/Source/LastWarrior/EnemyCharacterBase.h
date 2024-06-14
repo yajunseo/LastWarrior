@@ -3,13 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AnimationAttackInterface.h"
+#include "EnemyAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "EnemyCharacterBase.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate);
 
 UCLASS()
-class LASTWARRIOR_API AEnemyCharacterBase : public ACharacter
+class LASTWARRIOR_API AEnemyCharacterBase : public ACharacter, public IAnimationAttackInterface
 {
 	GENERATED_BODY()
 
@@ -32,6 +34,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TArray<FVector> PatrolPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AWeapon> Weapon;
 	
 public:	
 	// Called every frame
@@ -47,10 +52,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float Damage);
 
+	virtual void AttackHitCheck() override;
+	virtual void AttackHitCheckEnd() override;
+	virtual void AttackMotionEnd() override;
+
+	bool IsAttack = false;
+	bool HitCheckOn = false;
 	void Attack();
 	FOnAttackEndDelegate OnAttackEnd;
 
+	void SetWeapon();
 private:
-	FTimerHandle TestTimerHandle;
-	void TestAttackEnd();
+	UEnemyAnimInstance* Anim = nullptr;
+
+	UPROPERTY()
+	AWeapon* WeaponInstance = nullptr;
 };

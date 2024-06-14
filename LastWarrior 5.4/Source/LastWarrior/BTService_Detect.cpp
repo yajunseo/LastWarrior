@@ -55,13 +55,13 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 			{
 				OwnerComp.GetBlackboardComponent()->SetValueAsObject(AEnemyAIController::TargetKey, Warrior);
 				
-				DrawDebugSphere(World, Center, DetectRange, 16, FColor::Green, false, 0.2f);
-				DrawDebugPoint(World, Warrior->GetActorLocation(), 10.0f, FColor::Blue, false, 0.2f);
-				DrawDebugLine(World, ControllingPawn->GetActorLocation(), Warrior->GetActorLocation(), FColor::Blue, false, 0.2f);
+				DrawDebugSphere(World, Center, DetectRange, 16, FColor::Green, false, 1.0f);
+				DrawDebugPoint(World, Warrior->GetActorLocation(), 10.0f, FColor::Blue, false, 1.0f);
+				DrawDebugLine(World, ControllingPawn->GetActorLocation(), Warrior->GetActorLocation(), FColor::Blue, false, 1.0f);
 				return;
 			}
 		}
 	}
 	
-	DrawDebugSphere(World, Center, DetectRange, 16, FColor::Red, false, 0.2);
+	DrawDebugSphere(World, Center, DetectRange, 16, FColor::Red, false, 1.0f);
 }
